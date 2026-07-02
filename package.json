@@ -2,7 +2,10 @@
   "name": "playwrightagenticframework",
   "version": "1.0.0",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "agent:weather": "tsx agentic/agents/testAgent.ts",
+    "agent:requirement": "tsx agentic/agents/requirementAgent.ts"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -10,5 +13,9 @@
   "devDependencies": {
     "@playwright/test": "^1.61.1",
     "@types/node": "^26.1.0"
+  },
+  "dependencies": {
+    "@openrouter/agent": "^0.7.2",
+    "zod": "^4.4.3"
   }
 }
