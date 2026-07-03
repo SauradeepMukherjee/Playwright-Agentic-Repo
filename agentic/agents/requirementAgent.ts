@@ -1,6 +1,6 @@
 import { stepCountIs } from '@openrouter/agent';
 import { openrouter } from '../config/agent.config';
-import { convertRequirementTool } from '../skills/requirementSkill';
+import { convertRequirementTool } from '../skills/work-item-to-json';
 
 async function runRequirementAgent() {
   console.log("Starting Dedicated Requirement Parsing Agent...");

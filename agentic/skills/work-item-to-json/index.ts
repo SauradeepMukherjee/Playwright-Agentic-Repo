@@ -2,7 +2,7 @@ import { tool } from "@openrouter/agent";
 import { z } from "zod";
 import * as fs from "fs";
 import * as path from "path";
-import { openrouter } from "../config/agent.config";
+import { openrouter } from "../../config/agent.config";
 
 export const convertRequirementTool = tool({
   name: "convert_requirement_to_json",
@@ -30,38 +30,17 @@ export const convertRequirementTool = tool({
       `[Agent executing tool...] Invoking OpenRouter model to parse markdown to JSON...`,
     );
 
+    // Read the prompt template from skill.md
+    const templatePath = path.resolve(__dirname, "skill.md");
+    if (!fs.existsSync(templatePath)) {
+      throw new Error(`Prompt template not found at: ${templatePath}`);
+    }
+    const template = fs.readFileSync(templatePath, "utf8");
+    const prompt = template.replace("{{markdownContent}}", markdownContent);
+
     const result = openrouter.callModel({
       model: "openrouter/free",
-      input: `Read the following requirement specification markdown and convert it into a structured JSON object.
-      
-Requirements Markdown:
-${markdownContent}
-
-Your response must be a single, valid JSON object matching the following structure:
-{
-  "storyId": "e.g., SCRUM-101",
-  "title": "Story title",
-  "description": "Short description of the user story",
-  "applicationUrl": "Target URL",
-  "credentials": {
-    "username": "Username if provided",
-    "password": "Password if provided"
-  },
-  "acceptanceCriteria": [
-    {
-      "id": "e.g., AC1, AC2",
-      "title": "Acceptance criteria title",
-      "scenarios": [
-        "List of steps, expectations, and rules under this criterion"
-      ]
-    }
-  ],
-  "businessRules": [
-    "List of business rules"
-  ]
-}
-
-Return ONLY the raw JSON output. Do not include any explanations, introduction, or markdown backticks.`,
+      input: prompt,
     });
 
     const rawText = await result.getText();
